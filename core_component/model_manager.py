@@ -15,7 +15,7 @@ logger = logging.getLogger("ModelManager")
 
 """
 @author: Yixin Huang
-@last update: 2025-03-06 14:36
+@last update: 2025-03-07 14:46
 @tested: True
 """
 
@@ -60,8 +60,8 @@ class GPUAllocator:
             available = gpu.total_memory - gpu.used_memory
             if available >= required_mem:
                 gpu.used_memory += required_mem
-                return gpu_id
-        return None
+                return gpu.total_memory, available, gpu_id
+        return gpu.total_memory, available, None
 
     def release_gpu(self, gpu_id: int, allocated_mem: float):
         if gpu_id in self.gpus:
@@ -82,10 +82,12 @@ class ModelManager:
         # Allocate resources
         gpu_id = None
         if config.device == "cuda":
-            gpu_id = self.allocator.allocate_gpu(required_mem)
+            # memory is in MB
+            total_memory, available, gpu_id = self.allocator.allocate_gpu(required_mem)
+            logger.info(f"The required memory is {required_mem}, GPU ID: {gpu_id}, Available Memory: {available}\n")
             if gpu_id is None:  # Fallback to CPU if no GPU available
                 config = config.model_copy(update={"device": "cpu"})
-                logger.warning(f"Insufficient GPU memory, falling back to CPU for {config.framework}")
+                logger.warning(f"Insufficient GPU memory (Total Memory: {total_memory}), falling back to CPU for {config.framework} The required memory is: {required_mem} MB, but {available} MB left\n")
 
         # Create model instance
         model = ModelFactory.create_model(config)

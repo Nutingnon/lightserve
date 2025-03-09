@@ -3,8 +3,8 @@ import threading
 import psutil
 from pydantic import BaseModel
 from typing import Dict, List, Optional
-from model_manager import ModelManager
-from base_model import BaseAIModel
+from lightserve.core_component.model_manager import ModelManager
+from lightserve.core_component.base_model import BaseAIModel
 import logging
 import torch
 import asyncio
@@ -27,7 +27,7 @@ os.environ["KINETO_DAEMON_INIT_DELAY_S"]="3"
 
 """
 @author: Yixin Huang
-@last update: 2025-03-06 16:26
+@last update: 2025-03-07 16:47
 @tested: True
 
 """
@@ -261,7 +261,7 @@ if __name__ == "__main__":
 
 
     import asyncio
-    from model_manager import ModelManager
+    from lightserve.core_component.model_manager import ModelManager
     from model_config import ModelConfig, ModelFramework
 
     async def main():

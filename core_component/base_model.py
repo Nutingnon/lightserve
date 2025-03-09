@@ -74,53 +74,8 @@ class BaseAIModel(ABC):
             self.update_config(device=prev_device)
             raise RuntimeError(f"Device change failed: {str(e)}")
 
-class PyTorchModel(BaseAIModel):
-    """PyTorch implementation with external config"""
-    
-    def __init__(self, config: ModelConfig):
-        super().__init__(config)
-        if config.framework != ModelFramework.PYTORCH:
-            raise ValueError("Invalid framework for PyTorch model")
 
-    def load(self, model_path: str, **kwargs):
-        # Update config with load parameters
-        if "device" in kwargs:
-            self.update_config(device=kwargs["device"])
-            
-        # Model loading logic
-        self._model = torch.load(model_path)
-        self._model = self._model.to(self.config.device)
-        self._model.eval()
-        
-        # Update metadata
-        self.config.metadata.update({
-            "input_shape": kwargs.get("input_shape"),
-            "classes": kwargs.get("classes")
-        })
-        self._loaded = True
 
-# In PyTorchModel class
-    def _handle_device_change(self):
-        if not self._loaded:
-            return
-        
-        # Move model to new device
-        self._model = self._model.to(self.config.device)
-        
-        # Optional memory cleanup
-        if 'cuda' in self.config.device:
-            torch.cuda.synchronize()
-        elif self.prev_device.startswith('cuda'):
-            torch.cuda.empty_cache()
-
-    def predict(self, input_data: Any, **kwargs) -> Any:
-        if not self._loaded:
-            raise RuntimeError("Model not loaded")
-            
-        with torch.no_grad():
-            input_tensor = torch.as_tensor(input_data).to(self.config.device)
-            return self._model(input_tensor).cpu().numpy()
-        
 class YoloModel(BaseAIModel):
     """YOLOv11 load with external config"""
     def __init__(self, config: ModelConfig):
@@ -232,6 +187,8 @@ class ONNXModel(BaseAIModel):
             
         input_name = self._model.get_inputs()[0].name
         return self._model.run(None, {input_name: input_data})[0]
+
+
 
 class ModelFactory:
     """Factory for model creation with config validation"""

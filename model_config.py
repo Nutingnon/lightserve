@@ -7,6 +7,7 @@ class ModelFramework(str, Enum):
     YOLO = "yolo"
     ONNX = "onnx"
     TENSORFLOW = "tensorflow"
+    TRANSFORMERS = "transformers"
 
 class ModelConfig(PydanticBase):
     """Central configuration model for all AI models"""

@@ -1,0 +1,41 @@
+# Global settings
+defaults:
+  device: cuda  # auto-fallback to cpu if unavailable
+  logging_level: INFO
+  api_port: 8000
+
+# Model deployments
+models:
+  - name: yolo_detection
+    framework: YOLO
+    model_path: /home/yixin/study/models/yolo_model/detection/yolo12x.pt
+    device: cuda  # override global default
+    scaling:
+      min_instances: 1
+      max_instances: 3
+      target_gpu_util: 75
+      target_mem_util: 85
+      max_idle_time: 300
+    resources:
+      estimated_vram: 1500  # MB
+      max_system_mem: 4096  # MB
+
+  - name: resnet_classification 
+    framework: PYTORCH
+    model_path: models/resnet50.pth
+    scaling:
+      min_instances: 2
+      max_instances: 5
+      max_idle_time: 600
+
+# Monitoring thresholds
+monitoring:
+  gpu_temp_warning: 85  # °C
+  mem_usage_warning: 90  # %
+  health_check_interval: 30  # seconds
+
+# Resource allocation
+resources:
+  gpu_allocation_strategy: balanced
+  cpu_buffer: 20  # % CPU to leave free
+  mem_buffer: 1024  # MB memory to leave free
