@@ -3,13 +3,15 @@ import threading
 import psutil
 from pydantic import BaseModel
 from typing import Dict, List, Optional
-from lightserve.core_component.model_manager import ModelManager
-from lightserve.core_component.base_model import BaseAIModel
 import logging
 import torch
 import asyncio
 import functools
 import os
+import sys
+sys.path.append("/home/yixin/study/")
+
+from lightserve.core_component.model_manager import ModelManager
 
 try:
     import pynvml
@@ -262,7 +264,7 @@ if __name__ == "__main__":
 
     import asyncio
     from lightserve.core_component.model_manager import ModelManager
-    from model_config import ModelConfig, ModelFramework
+    from lightserve.core_component.model_config import ModelConfig, ModelFramework
 
     async def main():
         # Initialize dependencies
@@ -288,6 +290,7 @@ if __name__ == "__main__":
             for _ in range(3):
                 print("Current stats:", monitor.get_current_stats())
                 print("Health status:", monitor.check_health())
+                print("\n\n")
                 await asyncio.sleep(2)
         finally:
             await monitor.stop()

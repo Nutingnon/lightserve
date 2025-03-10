@@ -8,7 +8,7 @@ import threading
 
 """
 @author: yixin.huang
-@last update: 2025-03-07 13:48:00
+@last update: 2025-03-10 16:12:00
 @tested: True
 
 This lifecycle controller manages model instances by:
@@ -143,7 +143,7 @@ class LifecycleController:
 
 # Testing example
 if __name__ == "__main__":
-    from model_config import ModelConfig, ModelFramework
+    from lightserve.core_component.model_config import ModelConfig, ModelFramework
     from model_manager import ModelManager
     from resource_monitor import ResourceMonitor
     

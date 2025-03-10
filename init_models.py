@@ -1,5 +1,5 @@
 from lightserve.core_component.model_manager import ModelManager
-from lightserve.model_config import ModelConfig, ModelFramework
+from lightserve.core_component.model_config import ModelConfig, ModelFramework
 
 """
 @author: Yixin Huang

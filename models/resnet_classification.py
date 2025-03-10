@@ -1,11 +1,17 @@
 from abc import ABC, abstractmethod
 from typing import Any
-from model_config import ModelConfig, ModelFramework
+from lightserve.core_component.model_config import ModelConfig, ModelFramework
+from lightserve.models.base_model import BaseAIModel
 import torch
 import onnxruntime as ort
 import uuid
 import time
-from core_component.base_model import BaseAIModel
+
+"""
+@author: Yixin Huang
+@last update: 2025-03-09 11:41
+@tested: True
+"""
 
 class TransformersResNetForImageClassification(BaseAIModel):
     """HuggingFace Transformers implementation with external config
@@ -27,7 +33,7 @@ class TransformersResNetForImageClassification(BaseAIModel):
             self.update_config(device=kwargs["device"])
             
         # 加载模型
-        self._model = AutoModel.from_pretrained(model_path)
+        self._model = ResNetForImageClassification.from_pretrained(model_path)
         
         # 设备移动和评估模式
         self._model = self._model.to(self.config.device)
@@ -36,8 +42,7 @@ class TransformersResNetForImageClassification(BaseAIModel):
         # 更新元数据
         self.config.metadata.update({
             "model_type": self._model.config.model_type,
-            "supported_tasks": kwargs.get("tasks", ["text-classification"]),
-            "max_length": kwargs.get("max_length", 512)
+            "supported_tasks": kwargs.get("tasks", ["image-classification"]),
         })
         self._loaded = True
 
@@ -57,5 +62,5 @@ class TransformersResNetForImageClassification(BaseAIModel):
     def predict(self, input_data: torch.Tensor, **kwargs) -> Any:
         with torch.no_grad():
             logits = self._model(input_data).logits
-            predicted_label = logits.argmax(-1).item()
-            return predicted_label
+            # predicted_label = logits.argmax(-1).item()
+            return logits

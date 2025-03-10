@@ -1,12 +1,19 @@
 from abc import ABC, abstractmethod
 from typing import Any
-from model_config import ModelConfig, ModelFramework
 import torch
 import onnxruntime as ort
 import uuid
 import time
-from core_component.base_model import BaseAIModel
 
+from lightserve.core_component.model_config import ModelConfig, ModelFramework
+from lightserve.models.base_model import BaseAIModel
+
+
+"""
+@author: Yixin Huang
+@last update: 2025-03-09 11:41
+@tested: True
+"""
 
 class YoloModel(BaseAIModel):
     """YOLOv11 load with external config"""

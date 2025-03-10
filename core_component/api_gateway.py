@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from model_manager import ModelManager
-from base_model import BaseAIModel
+from lightserve.core_component.model_factory import BaseAIModel
 from typing import Dict, Any
 import logging
 

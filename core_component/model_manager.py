@@ -1,6 +1,6 @@
 from typing import Dict, Optional, List
-from model_config import ModelConfig, ModelFramework
-from base_model import BaseAIModel, ModelFactory
+import sys
+sys.path.append('/home/yixin/study/')
 import time
 import logging
 import torch
@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from enum import Enum, auto
 import psutil
 
+from lightserve.core_component.model_config import ModelConfig, ModelFramework
+from lightserve.core_component.model_factory import BaseAIModel, ModelFactory
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -15,7 +17,7 @@ logger = logging.getLogger("ModelManager")
 
 """
 @author: Yixin Huang
-@last update: 2025-03-07 14:46
+@last update: 2025-03-10 16:05
 @tested: True
 """
 
@@ -142,15 +144,6 @@ class ModelManager:
         for model_id in to_remove:
             self.destroy_instance(model_id)
 
-    # def _estimate_memory(self, config: ModelConfig) -> float:
-    #     """Estimate GPU memory requirements (simplified example)"""
-    #     # In real implementation, use model profiling
-    #     framework_mem = {
-    #         ModelFramework.PYTORCH: 1500,  # MB
-    #         ModelFramework.ONNX: 1000,
-    #         ModelFramework.YOLO: 1000
-    #     }
-    #     return framework_mem.get(config.framework, 2000)
 
     def _estimate_memory(self, config: ModelConfig) -> float:
         """Estimate GPU memory requirements using profiling"""
